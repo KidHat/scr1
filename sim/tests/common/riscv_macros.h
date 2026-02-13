@@ -103,7 +103,6 @@
 
 #define RVTEST_CODE_BEGIN                                               \
         .section .text.init;                                            \
-        .org 0xC0, 0x00;                                                \
         .balign  64;                                                    \
         .weak stvec_handler;                                            \
         .weak mtvec_handler;                                            \
@@ -116,6 +115,10 @@ trap_vector:                                                            \
         beq a4, a5, _report;                                            \
         li a5, CAUSE_MACHINE_ECALL;                                     \
         beq a4, a5, _report;                                            \
+        li a5, CAUSE_ILLEGAL_INSTRUCTION;                               \
+        bne a4, a5, 8f;                                                 \
+        jal ra, scr1_print_illegal_msg;                                 \
+8:                                                                      \
         /* if an mtvec_handler is defined, jump to it */                \
         la a4, mtvec_handler;                                           \
         beqz a4, 1f;                                                    \
@@ -133,6 +136,7 @@ _report:                                                                \
         j sc_exit;                                                      \
         .balign  64;                                                    \
         .globl _start;                                                  \
+        .section .text.start;                                           \
 _start:                                                                 \
         RISCV_MULTICORE_DISABLE;                                        \
         /*INIT_SPTBR;*/                                                 \
@@ -163,6 +167,18 @@ _start:                                                                 \
         csrw mepc, t0;                                                  \
         csrr a0, mhartid;                                               \
         mret;                                                           \
+scr1_print_illegal_msg:                                                 \
+        li t0, 0xF0000000;                                              \
+        la t1, scr1_illegal_msg;                                        \
+9:      lbu t2, 0(t1);                                                  \
+        beqz t2, 0f;                                                    \
+        sb t2, 0(t0);                                                   \
+        addi t1, t1, 1;                                                 \
+        j 9b;                                                           \
+0:      ret;                                                            \
+        .balign 4;                                                      \
+scr1_illegal_msg:                                                       \
+        .asciz "incorrectinstruction";                                  \
         .section .text;                                                 \
 _run_test:
 
@@ -816,4 +832,3 @@ pass: \
 #define TEST_DATA
 
 #endif
-
