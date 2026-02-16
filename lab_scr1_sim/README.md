@@ -58,3 +58,12 @@ gtkwave build/verilator_wf_AHB_MAX_imc_IPIC_1_TCM_1_VIRQ_1_TRACE_1/simx.vcd
 - `test_results.txt`
 - `tracelog_core_0.log`
 - `illegal.dump`
+
+
+## Подтверждение вывода строки
+
+### Консоль симуляции
+![console](images/console.png)
+
+### Waveform (GTKWave)
+![waveform](images/GTKWave.png)
