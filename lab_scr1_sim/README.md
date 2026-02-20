@@ -67,3 +67,4 @@ gtkwave build/verilator_wf_AHB_MAX_imc_IPIC_1_TCM_1_VIRQ_1_TRACE_1/simx.vcd
 
 ### Waveform (GTKWave)
 ![waveform](images/GTKWave.png)
+![](images/GTKWave2.png)
